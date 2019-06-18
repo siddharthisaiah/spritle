@@ -1,0 +1,20 @@
+{% extends 'postcard/base.html' %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="row text-center">
+	<div class="col-md-8">
+            <h1>User creation form</h1>
+
+            <form action="{% url 'signup' %}" method="POST">
+		{% csrf_token %}
+		{{ form.as_p }}
+                <button type="submit">Sign Up</button>
+            </form>
+	</div>
+    </div>
+</div>
+
+{% endblock content %}
