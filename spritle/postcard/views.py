@@ -77,3 +77,25 @@ def postcard_detail(request, pk):
             # TODO: redirect 404
             pass
     return render(request, 'postcard/detail.html', context)
+
+
+
+def postcard_like(request, pk):
+    if request.method == 'POST':
+        next = request.POST['next']
+        next = next.lstrip('/')
+        if next.startswith('detail'):
+            detail, pc_id = next.split('/')[:2]
+
+        user_likes_post = Like.objects.filter(postcard__id=pk, user=request.user).count() > 0
+
+        if user_likes_post:
+            Like.objects.filter(postcard__id=pk, user=request.user).delete() # unlike
+        else:
+            postcard = Postcard.objects.filter(id=pk)[0]
+            like = Like(postcard=postcard, user=request.user)
+            like.save()
+
+        if next != 'home/':
+            return redirect('postcard_detail', pk=pc_id)
+        return redirect(next)

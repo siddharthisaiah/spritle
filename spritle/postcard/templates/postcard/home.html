@@ -23,6 +23,15 @@
     <a href="{% url 'postcard_detail' pc.id %}">
 	<p>Number of comments: {{ pc.comment_set.count }}</p>
     </a>
+
+    <form action="{% url 'postcard_like' pc.id %}" method="POST">
+	{% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path|urlencode }}"/>
+        <button type="submit" class="btn btn-outline">
+	    <!-- todo: if user likes post make it bold -->
+	    <i class="far fa-heart"></i>
+	</button>
+    </form>
     
     <p>Number of likes: {{ pc.like_set.count }}</p>
     <hr/>

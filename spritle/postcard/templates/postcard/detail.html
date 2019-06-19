@@ -4,7 +4,19 @@
 
 <p>Post details: {{ postcard.post }}</p>
 
+<br/>
 
+<form action="{% url 'postcard_like' postcard.id %}" method="POST">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ request.path|urlencode }}"/>
+    <button type="submit" class="btn btn-outline">
+	<!-- todo: if user likes post make it bold -->
+	<i class="far fa-heart"></i>
+    </button>
+</form>
+
+<br/>
+<hr/>
 <ul>
     {% for c in comments %}
     <li>{{ c.comment }}</li>
