@@ -4,7 +4,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 
-from .forms import SignUpForm
+from .forms import SignUpForm, PostcardForm, CommentForm
 from .models import Postcard, Comment, Like
 # Create your views here.
 
@@ -30,7 +30,8 @@ def signup(request):
 def home(request):
     title = 'Home - Postcard'
     postcards = Postcard.objects.all()
-    context = {'title': title, 'postcards': postcards}
+    postcard_form = PostcardForm()
+    context = {'title': title, 'postcards': postcards, 'postcard_form': postcard_form}
     return render(request, 'postcard/home.html', context)
 
 
@@ -44,5 +45,6 @@ def postcard_detail(request, pk):
     # TODO: wrap in try catch
     postcard = Postcard.objects.filter(id=pk)[0]
     comments = Comment.objects.filter(postcard=postcard)
-    context = {'title': title, 'postcard': postcard, 'comments':comments}
+    comment_form = CommentForm()
+    context = {'title': title, 'postcard': postcard, 'comments':comments, 'comment_form': comment_form}
     return render(request, 'postcard/detail.html', context)

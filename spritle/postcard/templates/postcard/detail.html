@@ -11,5 +11,15 @@
     {% endfor %}
 </ul>
 
+<!-- comment form  -->
+
+<form action="{% url 'postcard_detail' postcard.id %}" method="POST">
+    {% csrf_token %}
+
+    {{ comment_form }}
+
+    <br/>
+    <button type="submit" class="btn btn-sm btn-primary">Comment!</button>
+</form>
 
 {% endblock content%}

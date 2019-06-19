@@ -10,3 +10,12 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'password1', 'password2', )
+
+
+
+class PostcardForm(forms.Form):
+    post = forms.CharField(widget=forms.Textarea(attrs={"rows": 5, "cols": 100}))
+
+
+class CommentForm(forms.Form):
+    comment = forms.CharField(widget=forms.Textarea(attrs={"rows": 5, "cols": 100}))
