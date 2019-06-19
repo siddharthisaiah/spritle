@@ -1,0 +1,23 @@
+{% extends 'postcard/base.html' %}
+
+{% block content %}
+
+<h2>All Postcards</h2>
+
+
+{% for pc in postcards %}
+<div>
+    <p>Created by: {{ pc.user.get_full_name }}</p>
+    <p>{{ pc.post }}</p>
+    
+    <a href="{% url 'postcard_detail' pc.id %}">
+	<p>Number of comments: {{ pc.comment_set.count }}</p>
+    </a>
+    
+    <p>Number of likes: {{ pc.like_set.count }}</p>
+    <hr/>
+</div>
+{% endfor %}
+
+
+{% endblock content %}

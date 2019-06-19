@@ -10,6 +10,7 @@ class Postcard(models.Model):
 
 
 class Comment(models.Model):
+    comment = models.TextField()
     postcard = models.ForeignKey(Postcard, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

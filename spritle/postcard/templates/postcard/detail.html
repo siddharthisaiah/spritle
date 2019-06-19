@@ -1,0 +1,15 @@
+{% extends 'postcard/base.html' %}
+
+{% block content%}
+
+<p>Post details: {{ postcard.post }}</p>
+
+
+<ul>
+    {% for c in comments %}
+    <li>{{ c.comment }}</li>
+    {% endfor %}
+</ul>
+
+
+{% endblock content%}

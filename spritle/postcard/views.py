@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 
 from .forms import SignUpForm
+from .models import Postcard, Comment, Like
 # Create your views here.
 
 def index(request):
@@ -27,9 +28,21 @@ def signup(request):
 
 @login_required
 def home(request):
-    return HttpResponse("Home Page")
+    title = 'Home - Postcard'
+    postcards = Postcard.objects.all()
+    context = {'title': title, 'postcards': postcards}
+    return render(request, 'postcard/home.html', context)
 
 
 
-def login(request):
-    return HttpResponse("Login page")
+# def login(request):
+#     return HttpResponse("Login page")
+
+
+def postcard_detail(request, pk):
+    title = 'Postcard - Post'
+    # TODO: wrap in try catch
+    postcard = Postcard.objects.filter(id=pk)[0]
+    comments = Comment.objects.filter(postcard=postcard)
+    context = {'title': title, 'postcard': postcard, 'comments':comments}
+    return render(request, 'postcard/detail.html', context)
