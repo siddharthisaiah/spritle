@@ -33,7 +33,9 @@ def home(request):
     title = 'Home - Postcard'
     postcards = Postcard.objects.all()
     postcard_form = PostcardForm()
-    context = {'title': title, 'postcards': postcards, 'postcard_form': postcard_form}
+    postcards_user_likes = list(Like.objects.filter(user=request.user).values_list('postcard_id', flat=True)) # 
+
+    context = {'title': title, 'postcards': postcards, 'postcard_form': postcard_form, 'postcards_user_likes': postcards_user_likes}
     
     if request.method == 'POST':
         pc_form = PostcardForm(request.POST)
@@ -63,7 +65,12 @@ def postcard_detail(request, pk):
     postcard = Postcard.objects.filter(id=pk)[0]
     comments = Comment.objects.filter(postcard=postcard)
     comment_form = CommentForm()
-    context = {'title': title, 'postcard': postcard, 'comments':comments, 'comment_form': comment_form}
+    postcards_user_likes = list(Like.objects.filter(user=request.user).values_list('postcard_id', flat=True))
+    context = {'title': title,
+               'postcard': postcard,
+               'comments':comments,
+               'comment_form': comment_form,
+               'postcards_user_likes': postcards_user_likes}
 
     if request.method == 'POST':
         c_form = CommentForm(request.POST)

@@ -32,10 +32,15 @@
 			    {% csrf_token %}
 			    
 			    <input name="next" type="hidden" value="{{ request.path|urlencode }}"/>
-			    <button type="submit" class="btn btn-outline">
+			    <button type="submit" class="btn btn-link">
 				<!-- todo: if user likes post make it bold -->
 				{% if postcard.like_set.count != 0 %}
-				{{ postcard.like_set.count }}  <i class="far fa-heart"></i>
+				{{ postcard.like_set.count }} 
+				{% if postcard.id in postcards_user_likes %}
+				<i class="fas fa-heart"></i>
+				{% else %}
+				<i class="far fa-heart"></i>
+				{% endif %}
 				{% else %}
 				<i class="far fa-heart"></i>
 				{% endif%}
