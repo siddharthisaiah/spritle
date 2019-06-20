@@ -34,7 +34,7 @@ def signup(request):
 def home(request):
 
     title = 'Home - Postcard'
-    postcards = Postcard.objects.all()
+    postcards = Postcard.objects.order_by('-created_at')
     postcard_form = PostcardForm()
     postcards_user_likes = list(Like.objects.filter(user=request.user).values_list('postcard_id', flat=True)) # 
 
