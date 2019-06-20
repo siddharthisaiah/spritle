@@ -14,8 +14,8 @@ class SignUpForm(UserCreationForm):
 
 
 class PostcardForm(forms.Form):
-    post = forms.CharField(widget=forms.Textarea(attrs={"rows": 5, "cols": 100}))
+    post = forms.CharField(label="Send a Postcard!", widget=forms.Textarea(attrs={"rows": 3, "cols": 100}))
 
 
 class CommentForm(forms.Form):
-    comment = forms.CharField(widget=forms.Textarea(attrs={"rows": 5, "cols": 100}))
+    comment = forms.CharField(widget=forms.Textarea(attrs={"rows": 3, "cols": 100}))

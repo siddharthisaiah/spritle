@@ -1,42 +1,120 @@
 {% extends 'postcard/base.html' %}
 
 {% block content %}
+{% load crispy_forms_tags %}
 
 
-<form action="{% url 'home' %}" method="POST">
-    {% csrf_token %}
-    
-    {{ postcard_form }}
+<div class="container pt-4">
+    <div class="row">
+	<div class="col-md-8 ml-auto mr-auto">
 
-    <br/>
-    <button type="submit" class="btn btn-sm btn-primary">Post</button>
-</form>
+	    <form action="{% url 'home' %}" method="POST">
+		{% csrf_token %}
+		{{ postcard_form|crispy }}
 
-<h2>All Postcards</h2>
+		<div align="right">
+		    <button type="submit" class="btn btn-sm btn-primary">Post</button>
+		</div>
+	    </form>
+            <br/>
 
+	</div>
+    </div>
 
-{% for pc in postcards %}
-<div>
-    <p>Created by: {{ pc.user.get_full_name }}</p>
-    <p>{{ pc.post }}</p>
-    
-    <a href="{% url 'postcard_detail' pc.id %}">
-	<p>Number of comments: {{ pc.comment_set.count }}</p>
-    </a>
+    <div class="row">
+	<div class="col-md-8 ml-auto mr-auto">
+	    <h2>Latest Postcards</h2>
 
-    <form action="{% url 'postcard_like' pc.id %}" method="POST">
-	{% csrf_token %}
-        <input name="next" type="hidden" value="{{ request.path|urlencode }}"/>
-        <button type="submit" class="btn btn-outline">
-	    <!-- todo: if user likes post make it bold -->
-	    <i class="far fa-heart"></i>
-	</button>
-    </form>
-    
-    <p>Number of likes: {{ pc.like_set.count }}</p>
-    <hr/>
+            <br/>
+
+	    <!-- begin postcard detail -->
+	    
+            <!-- <div class="postcard m-2 p-2 border rounded">
+	         <div class="row">
+                 <div class="col-md-2 postcard-user-pic">
+                 <img alt="profile-pic" src="https://placeimg.com/50/50/people" heigh="50" width="50" class="rounded-circle" />
+		 </div>
+		 <div class="postcard-title col-md-10 mt-2">
+		 <p>From Siddharth Isaiah</p>
+		 </div>
+		 </div>
+                 <br/>
+                 <div class="postcard-post">
+                 <p>Tortor vitae purus faucibus ornare suspendisse! Facilisi etiam dignissim diam quis enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra orci sagittis eu volutpat odio facilisis mauris sit amet.</p>
+		 </div>
+                 <div class="post-card-details row">
+                 <div class="postcard-time col-md-3">
+                 <i>3 hrs ago</i>
+		 </div>
+                 <div class="col-md-3"></div>
+                 <div class="postcard-likes col-md-3">
+		 7 <i class="far fa-heart"></i>
+		 </div>
+                 <div class="postcard-comments col-md-3">
+		 <a href="#">5 Comments</a>
+		 </div>
+		 </div>
+		 </div> -->
+	    
+	    <!-- end postcard detail -->
+
+	    {% for pc in postcards %}
+	    
+	    <div class="postcard m-2 p-2 border rounded">
+	        <div class="row">
+                    <div class="col-md-2 postcard-user-pic">
+                        <img alt="profile-pic" src="https://placeimg.com/50/50/people" heigh="50" width="50" class="rounded-circle" />
+		    </div>
+		    <div class="postcard-title col-md-10 mt-2">
+			<p>{{ pc.user.get_full_name}}</p>
+		    </div>
+		</div>
+                <br/>
+                <div class="postcard-post">
+                    <p>{{ pc.post }}</p>
+		</div>
+                <div class="post-card-details row">
+                    <div class="postcard-time col-md-3">
+                        <i>{{ pc.created_at|timesince }}</i>
+		    </div>
+                    <div class="col-md-3"></div>
+                    <div class="postcard-likes col-md-3">
+			
+			<form action="{% url 'postcard_like' pc.id %}" method="POST">
+			    {% csrf_token %}
+			     
+			    <input name="next" type="hidden" value="{{ request.path|urlencode }}"/>
+			    <button type="submit" class="btn btn-outline">
+				<!-- todo: if user likes post make it bold -->
+				{% if pc.like_set.count != 0 %}
+				{{ pc.like_set.count }}  <i class="far fa-heart"></i>
+				{% else %}
+				<i class="far fa-heart"></i>
+				{% endif%}
+
+			    </button>
+			</form>
+		    </div>
+                    <div class="postcard-comments col-md-3">
+			<a href="{% url 'postcard_detail' pc.id %}">
+			    {% if pc.comment_set.count == 0 %}
+			    No Comments
+			    {% else %}
+			    {{ pc.comment_set.count }} Comments
+			    {% endif%}
+			    
+			</a>
+		    </div>
+		</div>
+	    </div>
+            <br/>
+	    
+	    {% endfor %}
+	    
+	</div>
+    </div>
 </div>
-{% endfor %}
+
 
 
 {% endblock content %}

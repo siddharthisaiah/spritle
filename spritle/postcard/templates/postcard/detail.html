@@ -1,37 +1,108 @@
 {% extends 'postcard/base.html' %}
 
 {% block content%}
+{% load crispy_forms_tags %}
 
-<p>Post details: {{ postcard.post }}</p>
 
-<br/>
+<div class="container pt-4">
+    <div class="row">
+	<div class="col-md-8 ml-auto mr-auto">
 
-<form action="{% url 'postcard_like' postcard.id %}" method="POST">
-    {% csrf_token %}
-    <input name="next" type="hidden" value="{{ request.path|urlencode }}"/>
-    <button type="submit" class="btn btn-outline">
-	<!-- todo: if user likes post make it bold -->
-	<i class="far fa-heart"></i>
-    </button>
-</form>
+	    <!-- begin postcard detail -->
+	    
+            <div class="postcard m-2 p-2 border rounded">
+	        <div class="row">
+                    <div class="col-md-2 postcard-user-pic">
+			<img alt="profile-pic" src="https://placeimg.com/50/50/people" heigh="50" width="50" class="rounded-circle" />
+		    </div>
+		    <div class="postcard-title col-md-5 mt-2">
+			<p>{{ postcard.user.get_full_name }}</p>
+		    </div>
+                    <div class="postcard-created-time col-md-5 mt-2">
+			{{ postcard.created_at }}
+		    </div>
+		</div>
+                <br/>
+                <div class="postcard-post">
+                    <p>{{ postcard.post }}</p>
+		</div>
+                <div class="post-card-details row">
+                    <div class="postcard-likes col-md" align="right">
+			<form action="{% url 'postcard_like' postcard.id %}" method="POST">
+			    {% csrf_token %}
+			    
+			    <input name="next" type="hidden" value="{{ request.path|urlencode }}"/>
+			    <button type="submit" class="btn btn-outline">
+				<!-- todo: if user likes post make it bold -->
+				{% if postcard.like_set.count != 0 %}
+				{{ postcard.like_set.count }}  <i class="far fa-heart"></i>
+				{% else %}
+				<i class="far fa-heart"></i>
+				{% endif%}
 
-<br/>
-<hr/>
-<ul>
-    {% for c in comments %}
-    <li>{{ c.comment }}</li>
-    {% endfor %}
-</ul>
+			    </button>
+			</form>
+		    </div>
+		</div>
+	    </div>
+	    
+	    <!-- end postcard detail -->
 
-<!-- comment form  -->
-
-<form action="{% url 'postcard_detail' postcard.id %}" method="POST">
-    {% csrf_token %}
-
-    {{ comment_form }}
+	</div>
+    </div>
 
     <br/>
-    <button type="submit" class="btn btn-sm btn-primary">Comment!</button>
-</form>
+    <div class="row">
+	<div class="col-md-8 ml-auto mr-auto">
+            <h3>Comments</h3>
 
-{% endblock content%}
+	    <!-- comment form start -->
+	    <form action="{% url 'postcard_detail' postcard.id %}" method="POST">
+		{% csrf_token %}
+
+		{{ comment_form|crispy }}
+
+		<div align="right">
+		    <button type="submit" class="btn btn-sm btn-primary">Comment</button>
+		</div>
+	    </form>
+	    <!-- comment form end -->
+	    
+	</div>
+    </div>
+
+    <br/>
+    
+    <div class="row">
+        <div class="col-md-8 ml-auto mr-auto">
+
+	    {% for c in comments %}
+	    <div class="comment m-2 p-2 border border-rounded">
+	        <div class="row border-bottom pb-1">
+                    <div class="col-md-2 postcard-user-pic">
+			<img alt="profile-pic" src="https://placeimg.com/50/50/people" heigh="50" width="50" class="rounded-circle" />
+		    </div>
+		    <div class="postcard-title col-md-5 mt-2">
+			<p>{{ c.user.get_full_name }}</p>
+		    </div>
+                    <div class="postcard-created-time col-md-5 mt-2">
+                        <small>
+                            <i>{{ c.created_at }}</i>
+			</small>
+		    </div>
+		</div>
+                <br/>
+                <div class="postcard-post">
+                    <p>{{ c.comment }}</p>
+		</div>
+                <div class="post-card-details row">
+		</div>
+	    </div>
+            <br/>
+	    {% endfor %}
+	</div>
+    </div>
+</div>
+
+
+{% endblock content %}
