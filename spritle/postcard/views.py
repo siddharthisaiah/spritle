@@ -4,9 +4,12 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.db import transaction
 
-from .forms import SignUpForm, PostcardForm, CommentForm
-from .models import Postcard, Comment, Like
+from .forms import SignUpForm, PostcardForm, CommentForm, ProfileForm
+from .models import Postcard, Comment, Like, Profile
 # Create your views here.
 
 def index(request):
@@ -22,7 +25,7 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('home/')
+            return redirect(reverse('home'))
             
     form = SignUpForm()
     return render(request, 'postcard/signup.html', {'form': form})
@@ -53,11 +56,7 @@ def home(request):
     return render(request, 'postcard/home.html', context)
 
 
-
-# def login(request):
-#     return HttpResponse("Login page")
-
-
+@login_required
 def postcard_detail(request, pk):
 
     title = 'Postcard - Post'
@@ -86,7 +85,7 @@ def postcard_detail(request, pk):
     return render(request, 'postcard/detail.html', context)
 
 
-
+@login_required
 def postcard_like(request, pk):
     if request.method == 'POST':
         next = request.POST['next']
@@ -106,3 +105,29 @@ def postcard_like(request, pk):
         if next != 'home/':
             return redirect('postcard_detail', pk=pc_id)
         return redirect(reverse('home'))
+
+
+@login_required
+def profile(request, pk):
+    
+    if request.user.id != pk:
+        # TODO: redirect 404
+        pass
+
+    profile_instance = Profile.objects.get(user=request.user)
+    
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile_instance)
+        if form.is_valid():
+            updated_profile = form.save(commit=False)
+            updated_profile.user = request.user
+            updated_profile.save()
+            
+            #Profile.objects.filter(user=request.user).update(profile_pic=profile_pic, bio=bio)
+
+            return redirect('profile', pk=request.user.id)
+    else:
+        data = { 'bio': request.user.profile.bio,
+                  'profile_pic': request.user.profile.profile_pic }
+        form = ProfileForm(initial=data)
+    return render(request, 'postcard/profile.html', {'form': form})

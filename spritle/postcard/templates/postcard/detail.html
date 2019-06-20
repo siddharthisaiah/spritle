@@ -13,13 +13,13 @@
             <div class="postcard m-2 p-2 border rounded">
 	        <div class="row">
                     <div class="col-md-2 postcard-user-pic">
-			<img alt="profile-pic" src="https://placeimg.com/50/50/people" heigh="50" width="50" class="rounded-circle" />
+			<img alt="profile-pic" src="{{ postcard.user.profile.profile_pic.url }}" width="50" class="rounded-circle" />
 		    </div>
 		    <div class="postcard-title col-md-5 mt-2">
 			<p>{{ postcard.user.get_full_name }}</p>
 		    </div>
                     <div class="postcard-created-time col-md-5 mt-2">
-			{{ postcard.created_at }}
+			<i>{{ postcard.created_at }}</i>
 		    </div>
 		</div>
                 <br/>
@@ -85,7 +85,7 @@
 	    <div class="comment m-2 p-2 border border-rounded">
 	        <div class="row border-bottom pb-1">
                     <div class="col-md-2 postcard-user-pic">
-			<img alt="profile-pic" src="https://placeimg.com/50/50/people" heigh="50" width="50" class="rounded-circle" />
+			<img alt="profile-pic" src="{{ c.user.profile.profile_pic.url }}" heigh="50" width="50" class="rounded-circle" />
 		    </div>
 		    <div class="postcard-title col-md-5 mt-2">
 			<p>{{ c.user.get_full_name }}</p>
