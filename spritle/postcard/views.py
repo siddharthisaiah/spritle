@@ -98,4 +98,4 @@ def postcard_like(request, pk):
 
         if next != 'home/':
             return redirect('postcard_detail', pk=pc_id)
-        return redirect(next)
+        return redirect(reverse('home'))
